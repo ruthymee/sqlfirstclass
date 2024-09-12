@@ -1,69 +1,83 @@
-my name is Ruth 
-ALTER TABLE STUDENT_info
-ADD CONTACT VARCHAR(20)
-
-select * from student_info
-
-INSERT INTO STUDENT_INFO 
-VALUES(1,'shade',20,'2024-02-14',5,'08130679435'),
-      (2,'tobi',23,'2024-02-14',10,'08130679435'),
-	  (3,'soji',35,'2024-02-14',15,'08130679435'),
-	  (4,'AWWAL',42,'2024-02-14',20,'08130679435'),
-	  (5,'EMMANUEL',35,'2024-02-14',25,'08130679435')
+--select first 10 rows of all attributes
+SELECT TOP(10) * FROM Superstore
 
 
-INSERT INTO department_table
-VALUES(5,'Statistics'),
-		(10, 'Software Design'),
-		(15, 'Database'),
-		(20, 'percentage'),
-		(25, 'Datatype')
+--fetching specified column
+SELECT Ship_mode, customer_name
+FROM Superstore
+
+--USING ALIASE AND CALCULATE THE UNIT PRICE OF EACH QUANTITY
+SELECT product_name, customer_name as name_, (sales/Quantity) as unit_price
+FROM Superstore
 
 
-	  --DROPPING DEPARTMENT TABLE
-	  drop table department_table
-
-	  ALTER TABLE department_table
-	  drop constraint [UQ__departme__226ED1575555C3D6]
-
-	  ALTER TABLE student_info
-	  drop constraint [UQ__student___870C3C8B2E4F65FC]
-
- SELECT* FROM DEPARTMENT_TABLE
- SELECT* FROM STUDENT_INFO
-
- --INSERTING WITH DEFAULT REG DATE
- INSERT INTO student_info (student_id,student_name,age,department_id,contact)
- VALUES(6,'RUTH',27,25,'08175442013'),
-        (7,'DEBORAH',31,15,'08176611817')
-
-		--MULTIPLE VALUE UPDATE
-		UPDATE Student_info
-		set department_id=20
-		Where student_id IN (4,5);
-
-		--SINGLE VALUE UPDATE
-		update student_info
-		set contact='08060267586'
-		where student_id=3
+--USING WHERE CLAUSE
+SELECT ship_mode, customer_name, product_name, city, quantity
+FROM SUPERSTORE
+WHERE Quantity >4;
 
 
-		--USE CASE STATEMENT TO UPDATE MULTIPLE ROWS
-		UPDATE student_info
-		SET contact =CASE
-		WHEN student_id=1 THEN '08164216674'
-		WHEN student_id=2 THEN '08023467298'
-		WHEN student_id=3 THEN '07035872982'
-		WHEN student_id=4 THEN '09068891720'
-		WHEN student_id=5 THEN '08051578810'
-		ELSE contact
-		END
-		WHERE student_id in (1,2,3,4,5)
+SELECT ship_mode, customer_name, product_name, city, quantity
+FROM SUPERSTORE
+WHERE Quantity BETWEEN 2 AND 4;
 
-		--DELETE OPERATION
-		DELETE FROM student_info
-		WHERE student_id=2
- 
- SELECT* FROM student_info
+
+SELECT ship_mode, customer_name, product_name, city, quantity
+FROM SUPERSTORE
+WHERE Quantity >=2 AND Quantity < 5
+
+
+--USING WHERE CLAUSE AND LIKE OPERATOR
+--start word like
+
+SELECT ship_mode, customer_name, product_name, city, quantity
+FROM SUPERSTORE
+WHERE City LIKE 'A%' and Quantity < 4
+
+--End word like
+SELECT ship_mode, customer_name, product_name, city, quantity
+FROM SUPERSTORE
+WHERE City LIKE '%on'
+
+--middle like
+SELECT ship_mode, customer_name, product_name, city,sales, quantity
+FROM SUPERSTORE
+WHERE City LIKE '%_m_%'
+
+--using IN operator find the transaction of Ken  Black, JOEL Eaton, Ryan Crowe
+SELECT ship_mode, customer_name, product_name, city,sales, quantity
+FROM SUPERSTORE
+WHERE Customer_Name IN ('Ken Black', 'Joel Eaton', 'Ryan Crowe')
+
+--ORDER CLAUSE IN ASC
+SELECT ship_mode, customer_name, product_name, city,sales, quantity
+FROM SUPERSTORE
+WHERE Customer_name IN  ('Ken Black', 'Joel Eaton', 'Ryan Crowe')
+ORDER BY QUANTITY ASC
+
+
+
+--ORDER CLAUSE IN DESC
+SELECT ship_mode, customer_name, product_name, city,sales, quantity
+FROM SUPERSTORE
+WHERE Customer_name IN  ('Ken Black', 'Joel Eaton', 'Ryan Crowe')
+ORDER BY QUANTITY DESC
+
+
+--GROUP BY  CLAUSE
+SELECT city FROM  Superstore
+Group by city
+
+SELECT city, count(*)as customer_count FROM  Superstore
+Group by city
+HAVING count (*)>100;
+
+SELECT city, SUM(Sales)AS Total_sales, MAX(Quantity) AS Max_quantity,Count(*) As 'number of transaction'
+FROM Superstore
+Group by city
+ORDER BY Total_sales DESC
+
+
+
 
 	  
