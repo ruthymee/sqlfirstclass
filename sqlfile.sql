@@ -1,83 +1,67 @@
---select first 10 rows of all attributes
-SELECT TOP(10) * FROM Superstore
+--join Query using inner join
+--select the table to view the attributes in the in the entities
+SELECT * FROM sales_rescord
 
+SELECT * FROM product_record
 
---fetching specified column
-SELECT Ship_mode, customer_name
-FROM Superstore
+SELECT customer, units_sold, product_name, price, s.product_id
+FROM sales_rescord AS s 
+JOIN
+product_record AS p ON s.product_id=p.Product_id
 
---USING ALIASE AND CALCULATE THE UNIT PRICE OF EACH QUANTITY
-SELECT product_name, customer_name as name_, (sales/Quantity) as unit_price
-FROM Superstore
-
-
---USING WHERE CLAUSE
-SELECT ship_mode, customer_name, product_name, city, quantity
-FROM SUPERSTORE
-WHERE Quantity >4;
-
-
-SELECT ship_mode, customer_name, product_name, city, quantity
-FROM SUPERSTORE
-WHERE Quantity BETWEEN 2 AND 4;
-
-
-SELECT ship_mode, customer_name, product_name, city, quantity
-FROM SUPERSTORE
-WHERE Quantity >=2 AND Quantity < 5
-
-
---USING WHERE CLAUSE AND LIKE OPERATOR
---start word like
-
-SELECT ship_mode, customer_name, product_name, city, quantity
-FROM SUPERSTORE
-WHERE City LIKE 'A%' and Quantity < 4
-
---End word like
-SELECT ship_mode, customer_name, product_name, city, quantity
-FROM SUPERSTORE
-WHERE City LIKE '%on'
-
---middle like
-SELECT ship_mode, customer_name, product_name, city,sales, quantity
-FROM SUPERSTORE
-WHERE City LIKE '%_m_%'
-
---using IN operator find the transaction of Ken  Black, JOEL Eaton, Ryan Crowe
-SELECT ship_mode, customer_name, product_name, city,sales, quantity
-FROM SUPERSTORE
-WHERE Customer_Name IN ('Ken Black', 'Joel Eaton', 'Ryan Crowe')
-
---ORDER CLAUSE IN ASC
-SELECT ship_mode, customer_name, product_name, city,sales, quantity
-FROM SUPERSTORE
-WHERE Customer_name IN  ('Ken Black', 'Joel Eaton', 'Ryan Crowe')
-ORDER BY QUANTITY ASC
+--CALCULATE THE AMOUNT EARN IN EACH TRANSACTION AND ORDER
+SELECT customer, units_sold, price, production_cost, (units_sold * price) AS Selling_price,
+(units_sold * production_cost) AS production_price, (units_sold * price)-(units_sold * Production_cost) AS profit
+FROM sales_rescord s
+JOIN
+Product_record p ON s.Product_id=p.Product_id
 
 
 
---ORDER CLAUSE IN DESC
-SELECT ship_mode, customer_name, product_name, city,sales, quantity
-FROM SUPERSTORE
-WHERE Customer_name IN  ('Ken Black', 'Joel Eaton', 'Ryan Crowe')
-ORDER BY QUANTITY DESC
+SELECT product_name, SUM((units_sold *price)) AS total_sales_per_product, 
+SUM((units_sold *Production_cost)) AS Production_cost,
+SUM(((units_sold *price)-(units_sold *Production_cost))) AS PROFIT
+FROM sales_rescord s
+JOIN product_record p ON s.Product_id=p.Product_id
+GROUP BY Product_name
+ORDER BY PROFIT DESC
+
+--Calculate the profit made from each product
+SELECT product_name, SUM(((units_sold *price)-(units_sold *Production_cost))) AS PROFIT 
+FROM sales_rescord s
+JOIN product_record p ON s.Product_id=p.Product_id
+GROUP BY Product_name
+ORDER BY PROFIT DESC
+
+--LEFT JOIN
+SELECT Customer, p.product_id, product_name
+FROM product_record p
+LEFT JOIN sales_rescord s
+ON p.Product_id=s.Product_id
 
 
---GROUP BY  CLAUSE
-SELECT city FROM  Superstore
-Group by city
+--Using leftjoin find the department name of each student
 
-SELECT city, count(*)as customer_count FROM  Superstore
-Group by city
-HAVING count (*)>100;
+SELECT * FROM student_info
 
-SELECT city, SUM(Sales)AS Total_sales, MAX(Quantity) AS Max_quantity,Count(*) As 'number of transaction'
-FROM Superstore
-Group by city
-ORDER BY Total_sales DESC
+SELECT department_name, student_name, department_table.department_id
+FROM department_table
+LEFT JOIN student_info
+ON  department_table.department_id=student_info.department_id
+ 
+ --Right join
+ SELECT department_name, student_name, department_table.department_id
+ FROM department_table
+ RIGHT JOIN student_info
+ ON department_table.department_id=student_info.department_id
 
+ --Full outer join
+ SELECT department_name, student_name, department_table.department_id
+ FROM department_table
+ FULL OUTER JOIN student_info
+ ON department_table.department_id=student_info.department_id
 
-
-
-	  
+ SELECT department_name, student_name, department_table.department_id
+ FROM department_table
+ INNER JOIN student_info
+ ON department_table.department_id=student_info.department_id
